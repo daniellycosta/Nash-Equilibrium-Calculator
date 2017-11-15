@@ -73,7 +73,7 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 	var nTurns = 1;
 	var p1Choice, p2Choice;
 	var p1PrevChoices,p2PrevChoices;
-	var p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //ANTERIOR AND CURRENT PROBABILITIES
+	var p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
 
 	if(nTurns==1){
 		//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
@@ -105,10 +105,10 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 	}
 	else{
 
-		while( !(wasNashEqAchieved(...p1ProbsAct1,...p2ProbsAct1)) ){
+		while( !(wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1)) ){
 		
-			p1Choice = bestChoiceValue(...valuesP2,...p2ProbsAct1,...valuesP1);
-			p2Choice = bestChoiceValue(...valuesP1,...p1ProbsAct1,...valuesP2);
+			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1);
+			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2);
 
 			p1PrevChoices.push(p1Choice);
 			p2PrevChoices.push(p2Choice);
@@ -117,17 +117,17 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 			p2ProbsAct1[0] = p2ProbsAct1[1];
 
 			if(p1Choice==1){
-				p1ProbsAct1[1] = calcProbAct1(...p1PrevChoices,...valuesP1);
+				p1ProbsAct1[1] = calcProbAct1(p1PrevChoices,valuesP1);
 			}
 			else{
-				p1ProbsAct1[1] = 1-(calcProbAct1(...p1PrevChoices,...valuesP1));
+				p1ProbsAct1[1] = 1-(calcProbAct1(p1PrevChoices,valuesP1));
 			}
 
 			if(p2Choice==1){
-				p2ProbsAct1[1] = calcProbAct1(...p2PrevChoices,...valuesP2);
+				p2ProbsAct1[1] = calcProbAct1(p2PrevChoices,valuesP2);
 			}
 			else{
-				p2ProbsAct1[1] = 1-(calcProbAct1(...p2PrevChoices,...valuesP2));
+				p2ProbsAct1[1] = 1-(calcProbAct1(p2PrevChoices,valuesP2));
 			}
 
 			nTurns++;
@@ -177,13 +177,13 @@ function getFormValues(){
 	gameTable+="</tr>"
 	gameTable+="<tr>"
 	gameTable+="<th>" + p1Actions[0] + "</th>"
-	gameTable+="<td>" + p1Values[0] + ", " + p2Values[1] +"</td>"
-	gameTable+="<td>" + p1Values[1] + ", " + p2Values[0] +"</td>"
+	gameTable+="<td>" + p1Values[0] + ", " + p2Values[0] +"</td>"
+	gameTable+="<td>" + p1Values[1] + ", " + p2Values[1] +"</td>"
 	gameTable+="</tr>"
 	gameTable+="<tr>"
 	gameTable+="<th>" + p1Actions[1] + "</th>"
-	gameTable+="<td>" + p1Values[1] + ", " + p2Values[0] +"</td>"
-	gameTable+="<td>" + p1Values[0] + ", " + p2Values[1] +"</td>"
+	gameTable+="<td>" + p1Values[1] + ", " + p2Values[1] +"</td>"
+	gameTable+="<td>" + p1Values[0] + ", " + p2Values[0] +"</td>"
 	gameTable+="</tr>"
 	gameTable+="</table>"
 	gameTable+="</div>"
@@ -191,11 +191,15 @@ function getFormValues(){
 	gameTable+="</div>"
 
 	config.innerHTML = gameTable;
-	getNashEq(...p1Values,...p2Values,...p1Actions,...p2Actions);
+	getNashEq(p1Values,p2Values,p1Actions,p2Actions);
  	
 	//DEBUG
+	console.log("p1Actions:")
 	console.log(p1Actions)
+	console.log("p2Actions:")
 	console.log(p2Actions)
+	console.log("p1Values:")
 	console.log(p1Values)
+	console.log("p2Values:")
 	console.log(p2Values)
 }

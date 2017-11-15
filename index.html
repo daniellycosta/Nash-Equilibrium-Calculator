@@ -14,9 +14,9 @@
 
 	<div class="jumbotron text-center col-xs-12">
 		<h1> Nash Equilibrium Calculator </h1>
-		<h3>Using best response dynamics for two players games</h3>
+		<h3>Using best response dynamics (Fictitious Play) for two players games</h3>
 	</div>
-
+	
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12" id = "config">
@@ -27,14 +27,15 @@
 					<h3>Player 1:</h3>
 				</div>
 				<div class="celulajogo col-xs-12 col-sm-6">
-					<h3> Considering that current player chooses Action 1:</h3>
+					<h3>Player 1 choice:</h3>
+					<h4> Considering that Player 2 chooses Action 1</h4>
 				</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 1: </label><br>
 						<input class="form-control" type="text" id="Pl1Action1">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value (If Player 2 chooses Action 1): </label><br>
+						<label>Value (Action 1, Action 1): </label><br>
 						<input class="form-control" type="number"  id="Pl1Value1">
 					</div>
 					
@@ -43,17 +44,21 @@
 						<input class="form-control" type="text" id="Pl1Action2">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value (If Player 2 chooses Action 2): </label><br>
+						<label>Value (Action 2, Action 1): </label><br>
 						<input class="form-control" type="number"  id="Pl1Value2">
 					</div>
-					
+				<div class="celulajogo col-xs-12 col-sm-6">
 					<h3>Player 2:</h3>
+				</div>
+				<div class="celulajogo col-xs-12 col-sm-6">
+					<h4> Considering that Player 2 chooses Action 2</h4>
+				</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 1: </label><br>
 						<input class="form-control" type="text" id="Pl2Action1">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value (If Player 1 chooses Action 1): </label><br>
+						<label>Value (Action 1, Action 2): </label><br>
 						<input class="form-control" type="number"  id="Pl2Value1">
 					</div>
 					
@@ -62,11 +67,11 @@
 						<input class="form-control" type="text" id="Pl2Action2">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value (If Player 1 chooses Action 2): </label><br>
+						<label>Value (Action 2, Action 2): </label><br>
 						<input class="form-control" type="number"  id="Pl2Value2">
 					</div>
 					
-					<button type="submit">Save Changes</button> 
+					<button type="submit" class="btn btn-secondary celulajogo">Save Changes</button> 
 				</form>
 			</div>
 
