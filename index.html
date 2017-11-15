@@ -4,35 +4,10 @@
 <head>
 	<title>Teoria dos Jogos</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel='stylesheet' href='css/index.css'>
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
-	<style type="text/css">
-		.celulajogo>input{
-			width: 100%;
-		}
-		.celulajogo {
-			margin-bottom:10px;
-		}
-
-		.rotate {
-
-			/* Safari */
-			-webkit-transform: rotate(-90deg);
-
-			/* Firefox */
-			-moz-transform: rotate(-90deg);
-
-			/* IE */
-			-ms-transform: rotate(-90deg);
-
-			/* Opera */
-			-o-transform: rotate(-90deg);
-
-			/* Internet Explorer */
-			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-			}
-	</style>
 </head>
 
 <body>
@@ -44,9 +19,9 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12" id = "config">
 				<h2>Configurations:</h2>
-				<form action="javascript:getFormValues()" id = "config">
+				<form action="javascript:getFormValues()" id = "form">
 					<h3>Player 1:</h3>
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 1: </label><br>
