@@ -146,7 +146,8 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 	results += "</li>";
 	results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1 + " and " + (1-p2ProbsAct1);
 	results += "</li>";
-	results += "</ul>"
+	results += "</ul>";
+	results += "<button type='button' class='btn btn-secondary celulajogo' onClick='window.location.reload()'>Return</button>"
 
 	resultsPlace.innerHTML = results;
 
