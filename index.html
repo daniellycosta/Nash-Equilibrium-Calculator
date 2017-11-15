@@ -21,41 +21,51 @@
 		<div class="row">
 			<div class="col-xs-12" id = "config">
 				<h2>Configurations:</h2>
+				
 				<form action="javascript:getFormValues()" id = "form">
+				<div class="celulajogo col-xs-12 col-sm-6">
 					<h3>Player 1:</h3>
+				</div>
+				<div class="celulajogo col-xs-12 col-sm-6">
+					<h3> Considering that current player chooses Action 1:</h3>
+				</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 1: </label><br>
-						<input type="text" id="Pl1Action1">
+						<input class="form-control" type="text" id="Pl1Action1">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value: </label><br>
+						<label>Value (If Player 2 chooses Action 1): </label><br>
 						<input class="form-control" type="number"  id="Pl1Value1">
 					</div>
+					
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 2: </label><br>
-						<input type="text" id="Pl1Action2">
+						<input class="form-control" type="text" id="Pl1Action2">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value: </label><br>
+						<label>Value (If Player 2 chooses Action 2): </label><br>
 						<input class="form-control" type="number"  id="Pl1Value2">
 					</div>
+					
 					<h3>Player 2:</h3>
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 1: </label><br>
-						<input type="text" id="Pl2Action1">
+						<input class="form-control" type="text" id="Pl2Action1">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value: </label><br>
+						<label>Value (If Player 1 chooses Action 1): </label><br>
 						<input class="form-control" type="number"  id="Pl2Value1">
 					</div>
+					
 					<div class="celulajogo col-xs-12 col-sm-6">
 						<label>Action 2: </label><br>
-						<input type="text" id="Pl2Action2">
+						<input class="form-control" type="text" id="Pl2Action2">
 					</div>
 					<div class="celulajogo col-xs-12 col-sm-6">
-						<label>Value: </label><br>
+						<label>Value (If Player 1 chooses Action 2): </label><br>
 						<input class="form-control" type="number"  id="Pl2Value2">
 					</div>
+					
 					<button type="submit">Save Changes</button> 
 				</form>
 			</div>
