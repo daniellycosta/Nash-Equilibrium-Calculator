@@ -4,8 +4,14 @@ var resultsPlace = document.getElementById("result")
 function wasNashEqAchieved(p1Probs,p2Probs){
 	let relativeErrorP1,relativeErrorP2;
 
-	relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100;
-	relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100;
+	relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100.0;
+	relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100.0;
+
+	//DEBUG
+	console.log("relativeErrorP1");
+	console.log(relativeErrorP1);
+	console.log("relativeErrorP2");
+	console.log(relativeErrorP2);
 
 	if(Math.abs(relativeErrorP1)<1 && Math.abs(relativeErrorP2)<1){
 		return true;
@@ -63,11 +69,11 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 	}else{
 		//PLAYER PROBABILITY OF CHOOSE ACTION 1 (RANDOM)
 		//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 AND ROUND IT TO ONE DIGIT AND FOUR DECIMAL
-		let randPlayerProbAct1 = (Math.random() * 1);
+		let randPlayerProbAct1 = Math.round(Math.random()*2);
    		randPlayerProbAct1 = randPlayerProbAct1.toFixed(4);
 		
 		//PLAYER CHOICE IN THIS CASE IS RANDOM
-		let randProb = (Math.random() * 1);
+		let randProb = (Math.random() * 2);
    		randProb = randProb.toFixed(4);
 
    		if(randProb<=randPlayerProbAct1){
@@ -87,8 +93,9 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 
 	if(nTurns==1){
 		//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
-		p1Choice = Math.floor(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
-		p2Choice = Math.floor(Math.random()*2);
+		p1Choice = Math.round(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
+		p2Choice = Math.round(Math.random()*2);
+		//Math.floor(Math.random()*(max-min+1)+min);
 		
 		p1PrevChoices = p1Choice;
 		p2PrevChoices = p2Choice;
@@ -110,12 +117,16 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 		nTurns++;
 			
 		//DEBUG
+		console.log("nTurns");
+		console.log(nTurns);
+		console.log("p1Choice");
 		console.log(p1Choice);
-		console.log(p2Choice);
+		console.log("p2Choice");
+		console.log(p2Choice)
 	}
 	else{
 
-		while( !(wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1)) ){
+		while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false ){
 		
 			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1,actionsP1);
 			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2,actionsP2);
@@ -143,7 +154,11 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 			nTurns++;
 
 			//DEBUG
+			console.log("nTurns");
+			console.log(nTurns);
+			console.log("p1Choice");
 			console.log(p1Choice);
+			console.log("p2Choice");
 			console.log(p2Choice);
 		}
 	}
