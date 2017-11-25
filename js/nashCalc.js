@@ -166,9 +166,9 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 		results += "<ul class='list-group'>";
 		results += "<li class='list-group-item'> Number of turns: " + nTurns;
 		results += "</li>";
-		results += "<li class='list-group-item'>Player 1 choice: " + p1ProbsAct1[1] + " and " + (1-p1ProbsAct1[1]) ;
+		results += "<li class='list-group-item'>Player 1 choice: "+ p1ProbsAct1[1]*100 + "% "+actionsP1[0]+" and " + (1-p1ProbsAct1[1])*100 + "% "+actionsP1[1];
 		results += "</li>";
-		results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1[1] + " and " + (1-p2ProbsAct1[1]);
+		results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1[1]*100 + "% "+actionsP2[0]+" and " + (1-p2ProbsAct1[1])*100 + "% "+actionsP2[1];
 		results += "</li>";
 		results += "</ul>";
 		results += "<button type='button' class='btn btn-secondary celulajogo' onClick='window.location.reload()'>Return</button>"
