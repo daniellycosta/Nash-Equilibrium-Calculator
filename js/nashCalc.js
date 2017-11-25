@@ -2,12 +2,12 @@ var formPlace = document.getElementById("form")
 var resultsPlace = document.getElementById("result")
 
 function wasNashEqAchieved(p1Probs,p2Probs){
-	var relativeErrorP1,relativeErrorP2;
+	let relativeErrorP1,relativeErrorP2;
 
 	relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100;
 	relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100;
 
-	if(Math.abs(relativeErrorP1)<10 && Math.abs(relativeErrorP2)<10){
+	if(Math.abs(relativeErrorP1)<1 && Math.abs(relativeErrorP2)<1){
 		return true;
 	}
 	else{
@@ -18,62 +18,72 @@ function wasNashEqAchieved(p1Probs,p2Probs){
 
 //RETURNS THE ACTION 1 PROBABILITY
 //FOR ACT2 PROB DO: 1 - ACT1 PROB
-function calcProbAct1(prevchoices, values){ 
-	var nChoices = prevchoices.length;       
-	var nAct1 = 0;
+function calcProbAct1(prevchoices, actions){ 
+	let nChoices = prevchoices.length;
+	
+	//DEBUG
+	console.log("nChoices:");
+	console.log(nChoices);
+
+	
+	let nAct1 = 0;
 
 	for(var i=0; i<nChoices; i++){
-		if (prevchoices[i] == values[0]){
+		if (prevchoices[i] == actions[0]){
 			nAct1++;
 		}
 	}
 
+	//DEBUG
+	console.log("PROBABILITY");
+	console.log(nAct1/nChoices);
+
 	return (nAct1/nChoices);
 }
 
-function bestChoiceValue(enemyValues,enemyProbs,playerValues){
-	var lessEnemyProb;
-	var enemyActions;
+function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 
-	//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 AND ROUND IT TO ONE DIGIT AND ONE DECIMAL
-	var randProb = (Math.random() * 1);
-   	randProb = randProb.toFixed(1);
+	signal = playerValues[1][1] - playerValues[1][2] - playerValues[2][1] + playerValues[2][2];
+	
+	if(signal>0){
+		if(enemyProbs[1] > ((playerValues[2][2] - playerValues[1][2])/signal)){
+			return playerActions[1] //ACTION 2
+		}
+		else{
+			return playerActions[0] //ACTION 1
+		}
 
-   	//IT DISCOVERS WHICH CHOICE THE OPPONENT WILL DO LESS LIKELY
-   	if(enemyProbs[1] < (1-enemyProbs[1])){
-   		lessEnemyProb = enemyProbs[1]; //[1] BECAUSE IT'S THE CURRENT PROBABILITY
-   		enemyActions = [0,1]; 
-   	}
-   	else{
-   		lessEnemyProb = (1-enemyProbs[1]);
-   		enemyActions = [1,0];
-   	}
+	} else if(signal<0){
+		if(enemyProbs[1] < ((playerValues[2][2] - playerValues[1][2])/signal)){
+			return playerActions[0] //ACTION 1
+		}
+		else{
+			return playerActions[1] //ACTION 2
+		}
+	}else{
+		//PLAYER PROBABILITY OF CHOOSE ACTION 1 (RANDOM)
+		//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 AND ROUND IT TO ONE DIGIT AND FOUR DECIMAL
+		let randPlayerProbAct1 = (Math.random() * 1);
+   		randPlayerProbAct1 = randPlayerProbAct1.toFixed(4);
+		
+		//PLAYER CHOICE IN THIS CASE IS RANDOM
+		let randProb = (Math.random() * 1);
+   		randProb = randProb.toFixed(4);
 
-   	if(randProb<=lessEnemyProb){
-   		//SO THE PLAYER WILL CHOOSE THE BEST CHOICE CONSIDERING THAT THE ANOTHER ONE
-   		//HAD SELECTED THE ACTION THAT HAVE A LESS PROBABILITY (enemyAction[0])
-   		if(playerValues[0]>enemyValues[ enemyActions[0] ]){
-   			return playerValues[0];
+   		if(randProb<=randPlayerProbAct1){
+   			return playerActions[0];
+   		} else{
+   			return playerActions[1];
    		}
-   		else{
-   			return playerValues[1];
-   		}
-   	}
-   	else{
-   		if (playerValues[0]>enemyValues[ enemyActions[1] ]){
-   			return playerValues[0];
-   		}
-   		else{
-   			return playerValues[1];
-   		}
-   	}
+
+	}
 }
 
 function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
-	var nTurns = 1;
-	var p1Choice, p2Choice;
-	var p1PrevChoices,p2PrevChoices;
-	var p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
+	let nTurns = 1;
+	let p1Choice, p2Choice;
+	let p1PrevChoices,p2PrevChoices;
+	let p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
 
 	if(nTurns==1){
 		//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
@@ -107,8 +117,8 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 
 		while( !(wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1)) ){
 		
-			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1);
-			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2);
+			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1,actionsP1);
+			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2,actionsP2);
 
 			p1PrevChoices.push(p1Choice);
 			p2PrevChoices.push(p2Choice);
@@ -117,17 +127,17 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 			p2ProbsAct1[0] = p2ProbsAct1[1];
 
 			if(p1Choice==1){
-				p1ProbsAct1[1] = calcProbAct1(p1PrevChoices,valuesP1);
+				p1ProbsAct1[1] = calcProbAct1(p1PrevChoices,actionsP1);
 			}
 			else{
-				p1ProbsAct1[1] = 1-(calcProbAct1(p1PrevChoices,valuesP1));
+				p1ProbsAct1[1] = 1-(calcProbAct1(p1PrevChoices,actionsP1));
 			}
 
 			if(p2Choice==1){
-				p2ProbsAct1[1] = calcProbAct1(p2PrevChoices,valuesP2);
+				p2ProbsAct1[1] = calcProbAct1(p2PrevChoices,actionsP2);
 			}
 			else{
-				p2ProbsAct1[1] = 1-(calcProbAct1(p2PrevChoices,valuesP2));
+				p2ProbsAct1[1] = 1-(calcProbAct1(p2PrevChoices,actionsP2));
 			}
 
 			nTurns++;
@@ -138,13 +148,13 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 		}
 	}
 
-	var results = "<h2> Results: </h2>";
+	let results = "<h2> Results: </h2>";
 	results += "<ul class='list-group'>";
 	results += "<li class='list-group-item'> Number of turns: " + nTurns;
 	results += "</li>";
-	results += "<li class='list-group-item'>Player 1 choice: " + p1ProbsAct1 + " and " + (1-p1ProbsAct1) ;
+	results += "<li class='list-group-item'>Player 1 choice: " + p1ProbsAct1[1] + " and " + (1-p1ProbsAct1[1]) ;
 	results += "</li>";
-	results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1 + " and " + (1-p2ProbsAct1);
+	results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1[1] + " and " + (1-p2ProbsAct1[1]);
 	results += "</li>";
 	results += "</ul>";
 	results += "<button type='button' class='btn btn-secondary celulajogo' onClick='window.location.reload()'>Return</button>"
@@ -154,13 +164,13 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 }
 
 function getFormValues(){
-	var p1Actions = [document.getElementById("Pl1Action1").value, document.getElementById("Pl1Action2").value];
-	var p2Actions = [document.getElementById("Pl2Action1").value, document.getElementById("Pl2Action2").value];
+	const p1Actions = [document.getElementById("Pl1Action1").value, document.getElementById("Pl1Action2").value];
+	const p2Actions = [document.getElementById("Pl2Action1").value, document.getElementById("Pl2Action2").value];
 	
-	var p1Values = [[document.getElementById("Pl1Value11").value, document.getElementById("Pl1Value12").value],[document.getElementById("Pl1Value21").value, document.getElementById("Pl1Value22").value]];
-	var p2Values = [[document.getElementById("Pl2Value11").value, document.getElementById("Pl2Value12").value],[document.getElementById("Pl2Value21").value, document.getElementById("Pl2Value22").value]];
+	const p1Values = [[document.getElementById("Pl1Value11").value, document.getElementById("Pl1Value12").value],[document.getElementById("Pl1Value21").value, document.getElementById("Pl1Value22").value]];
+	const p2Values = [[document.getElementById("Pl2Value11").value, document.getElementById("Pl2Value12").value],[document.getElementById("Pl2Value21").value, document.getElementById("Pl2Value22").value]];
 	
-	var gameTable = "<div class='container' id = 'table'>" 
+	let gameTable = "<div class='container' id = 'table'>" 
 	gameTable+="<div class='row'>"
 	gameTable+="<div class='col-xs-12'>"
 	gameTable+="<h2> Game Table: </h2>"
@@ -192,7 +202,7 @@ function getFormValues(){
 	gameTable+="</div>"
 
 	config.innerHTML = gameTable;
-	//getNashEq(p1Values,p2Values,p1Actions,p2Actions);
+	getNashEq(p1Values,p2Values,p1Actions,p2Actions);
  	
 	//DEBUG
 	console.log("p1Actions:")
