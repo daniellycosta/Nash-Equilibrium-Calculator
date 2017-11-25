@@ -7,7 +7,7 @@ function wasNashEqAchieved(p1Probs,p2Probs){
 	relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100;
 	relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100;
 
-	if(Math.abs(relativeErrorP1)<10 || Math.abs(relativeErrorP2)<10){
+	if(Math.abs(relativeErrorP1)<10 && Math.abs(relativeErrorP2)<10){
 		return true;
 	}
 	else{
@@ -157,8 +157,8 @@ function getFormValues(){
 	var p1Actions = [document.getElementById("Pl1Action1").value, document.getElementById("Pl1Action2").value];
 	var p2Actions = [document.getElementById("Pl2Action1").value, document.getElementById("Pl2Action2").value];
 	
-	var p1Values = [document.getElementById("Pl1Value1").value, document.getElementById("Pl1Value2").value];
-	var p2Values = [document.getElementById("Pl2Value1").value, document.getElementById("Pl2Value2").value];
+	var p1Values = [[document.getElementById("Pl1Value11").value, document.getElementById("Pl1Value12").value],[document.getElementById("Pl1Value21").value, document.getElementById("Pl1Value22").value]];
+	var p2Values = [[document.getElementById("Pl2Value11").value, document.getElementById("Pl2Value12").value],[document.getElementById("Pl2Value21").value, document.getElementById("Pl2Value22").value]];
 	
 	var gameTable = "<div class='container' id = 'table'>" 
 	gameTable+="<div class='row'>"
@@ -178,13 +178,13 @@ function getFormValues(){
 	gameTable+="</tr>"
 	gameTable+="<tr>"
 	gameTable+="<th>" + p1Actions[0] + "</th>"
-	gameTable+="<td>" + p1Values[0] + ", " + p2Values[0] +"</td>"
-	gameTable+="<td>" + p1Values[1] + ", " + p2Values[1] +"</td>"
+	gameTable+="<td>" + p1Values[0][0] + ", " + p2Values[0][0] +"</td>"
+	gameTable+="<td>" + p1Values[0][1] + ", " + p2Values[0][1] +"</td>"
 	gameTable+="</tr>"
 	gameTable+="<tr>"
 	gameTable+="<th>" + p1Actions[1] + "</th>"
-	gameTable+="<td>" + p1Values[1] + ", " + p2Values[1] +"</td>"
-	gameTable+="<td>" + p1Values[0] + ", " + p2Values[0] +"</td>"
+	gameTable+="<td>" + p1Values[1][0] + ", " + p2Values[1][0] +"</td>"
+	gameTable+="<td>" + p1Values[1][1] + ", " + p2Values[1][1] +"</td>"
 	gameTable+="</tr>"
 	gameTable+="</table>"
 	gameTable+="</div>"
@@ -192,7 +192,7 @@ function getFormValues(){
 	gameTable+="</div>"
 
 	config.innerHTML = gameTable;
-	getNashEq(p1Values,p2Values,p1Actions,p2Actions);
+	//getNashEq(p1Values,p2Values,p1Actions,p2Actions);
  	
 	//DEBUG
 	console.log("p1Actions:")
