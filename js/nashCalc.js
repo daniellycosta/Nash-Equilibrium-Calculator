@@ -126,7 +126,7 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 	}
 	else{
 
-		while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false ){
+		while(  nTurns < 10 /*wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false*/ ){
 		
 			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1,actionsP1);
 			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2,actionsP2);
