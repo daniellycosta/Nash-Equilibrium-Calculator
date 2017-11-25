@@ -35,7 +35,7 @@ function calcProbAct1(prevchoices, actions){
 	let nAct1 = 0;
 
 	for(var i=0; i<nChoices; i++){
-		if (prevchoices[i] == actions[0]){
+		if (prevchoices[i] == 0){
 			nAct1++;
 		}
 	}
@@ -49,84 +49,83 @@ function calcProbAct1(prevchoices, actions){
 
 function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 
-	signal = playerValues[1][1] - playerValues[1][2] - playerValues[2][1] + playerValues[2][2];
+	signal = playerValues[0][0] - playerValues[0][1] - playerValues[1][0] + playerValues[1][1];
 	
 	if(signal>0){
-		if(enemyProbs[1] > ((playerValues[2][2] - playerValues[1][2])/signal)){
-			return playerActions[1] //ACTION 2
+		if(enemyProbs[1] > ((playerValues[1][1] - playerValues[0][1])/signal)){
+			return 1 //playerActions[1] -> ACTION 2
 		}
 		else{
-			return playerActions[0] //ACTION 1
+			return 0 //playerActions[0] -> ACTION 1
 		}
 
 	} else if(signal<0){
-		if(enemyProbs[1] < ((playerValues[2][2] - playerValues[1][2])/signal)){
-			return playerActions[0] //ACTION 1
+		if(enemyProbs[1] < ((playerValues[1][1] - playerValues[0][1])/signal)){
+			return 0 //playerActions[0] -> ACTION 1
 		}
 		else{
-			return playerActions[1] //ACTION 2
+			return 1 //playerActions[1] -> ACTION 2
 		}
 	}else{
 		//PLAYER PROBABILITY OF CHOOSE ACTION 1 (RANDOM)
 		//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 AND ROUND IT TO ONE DIGIT AND FOUR DECIMAL
 		let randPlayerProbAct1 = Math.round(Math.random()*2);
-   		randPlayerProbAct1 = randPlayerProbAct1.toFixed(4);
+		randPlayerProbAct1 = randPlayerProbAct1.toFixed(4);
 		
 		//PLAYER CHOICE IN THIS CASE IS RANDOM
 		let randProb = (Math.random() * 2);
-   		randProb = randProb.toFixed(4);
+   		//randProb = randProb.toFixed(4);
 
    		if(randProb<=randPlayerProbAct1){
-   			return playerActions[0];
+   			return 0 //playerActions[0] -> ACTION 1
    		} else{
-   			return playerActions[1];
+   			return 1 //playerActions[1] -> ACTION 2
    		}
 
-	}
-}
+   	}
+   }
 
-function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
-	let nTurns = 1;
-	let p1Choice, p2Choice;
-	let p1PrevChoices,p2PrevChoices;
+   function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
+   	let nTurns = 1;
+   	let p1Choice, p2Choice;
+   	let p1PrevChoices,p2PrevChoices;
 	let p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
 
-	if(nTurns==1){
-		//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
-		p1Choice = Math.round(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
-		p2Choice = Math.round(Math.random()*2);
-		//Math.floor(Math.random()*(max-min+1)+min);
+	while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false ){
+		if(nTurns==1){
+			//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
+			p1Choice = Math.round(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
+			p2Choice = Math.round(Math.random()*2);
+			//Math.floor(Math.random()*(max-min+1)+min);
 		
-		p1PrevChoices = p1Choice;
-		p2PrevChoices = p2Choice;
+			p1PrevChoices = [p1Choice];
+			p2PrevChoices = [p2Choice];
 		
-		if(p1Choice==1){
-			p1ProbsAct1[1] = 1;
+			if(p1Choice==0){
+				p1ProbsAct1[1] = 1;
+			}
+			else{
+				p1ProbsAct1[1] = 0;
+			}
+
+			if(p2Choice==0){
+				p2ProbsAct1[1] = 1;
+			}
+			else{
+				p2ProbsAct1[1] = 0;
+			}
+		
+			nTurns++;
+
+			//DEBUG
+			console.log("nTurns");
+			console.log(nTurns);
+			console.log("p1Choice");
+			console.log(p1Choice);
+			console.log("p2Choice");
+			console.log(p2Choice)
 		}
 		else{
-			p1ProbsAct1[1] = 0;
-		}
-
-		if(p2Choice==1){
-			p2ProbsAct1[1] = 1;
-		}
-		else{
-			p2ProbsAct1[1] = 0;
-		}
-		
-		nTurns++;
-			
-		//DEBUG
-		console.log("nTurns");
-		console.log(nTurns);
-		console.log("p1Choice");
-		console.log(p1Choice);
-		console.log("p2Choice");
-		console.log(p2Choice)
-	}
-	else{
-
-		while(  nTurns < 10 /*wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false*/ ){
 		
 			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1,actionsP1);
 			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2,actionsP2);
@@ -163,18 +162,18 @@ function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
 		}
 	}
 
-	let results = "<h2> Results: </h2>";
-	results += "<ul class='list-group'>";
-	results += "<li class='list-group-item'> Number of turns: " + nTurns;
-	results += "</li>";
-	results += "<li class='list-group-item'>Player 1 choice: " + p1ProbsAct1[1] + " and " + (1-p1ProbsAct1[1]) ;
-	results += "</li>";
-	results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1[1] + " and " + (1-p2ProbsAct1[1]);
-	results += "</li>";
-	results += "</ul>";
-	results += "<button type='button' class='btn btn-secondary celulajogo' onClick='window.location.reload()'>Return</button>"
+		let results = "<h2> Results: </h2>";
+		results += "<ul class='list-group'>";
+		results += "<li class='list-group-item'> Number of turns: " + nTurns;
+		results += "</li>";
+		results += "<li class='list-group-item'>Player 1 choice: " + p1ProbsAct1[1] + " and " + (1-p1ProbsAct1[1]) ;
+		results += "</li>";
+		results += "<li class='list-group-item'>Player 2 choice: " + p2ProbsAct1[1] + " and " + (1-p2ProbsAct1[1]);
+		results += "</li>";
+		results += "</ul>";
+		results += "<button type='button' class='btn btn-secondary celulajogo' onClick='window.location.reload()'>Return</button>"
 
-	resultsPlace.innerHTML = results;
+		resultsPlace.innerHTML = results;
 
 }
 
@@ -218,7 +217,7 @@ function getFormValues(){
 
 	config.innerHTML = gameTable;
 	getNashEq(p1Values,p2Values,p1Actions,p2Actions);
- 	
+
 	//DEBUG
 	console.log("p1Actions:")
 	console.log(p1Actions)
