@@ -13,7 +13,7 @@ function wasNashEqAchieved(p1Probs,p2Probs){
 	console.log("relativeErrorP2");
 	console.log(relativeErrorP2);
 
-	if(Math.abs(relativeErrorP1)<10 && Math.abs(relativeErrorP2)<10){
+	if(Math.abs(relativeErrorP1)<3 && Math.abs(relativeErrorP2)<3){
 		return true;
 	}
 	else{
