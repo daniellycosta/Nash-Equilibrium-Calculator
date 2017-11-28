@@ -29,7 +29,7 @@ function wasNashEqAchieved(p1Probs,p2Probs, nTurns){
 
 //RETURNS THE ACTION 1 PROBABILITY
 //FOR ACT2 PROB DO: 1 - ACT1 PROB
-function calcProbAct1(prevchoices, actions){ 
+function calcProbAct1(prevchoices){ 
 	let nChoices = prevchoices.length;
 	
 	//DEBUG
@@ -52,16 +52,19 @@ function calcProbAct1(prevchoices, actions){
 	return (nAct1/nChoices);
 }
 
-function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
+function bestChoiceValue(enemyValues,enemyProbs,playerValues){
 
-	signal = playerValues[0][0] - playerValues[0][1] - playerValues[1][0] + playerValues[1][1];
+	signal = Number(playerValues[0][0])- Number(playerValues[0][1]) - Number(playerValues[1][0]) + Number(playerValues[1][1]);
+	
+	console.log("SIGNAL:");
+	console.log(signal);
 	
 	if(signal>0){
 		if(enemyProbs[1] > ((playerValues[1][1] - playerValues[0][1])/signal)){
-			return 1 //playerActions[1] -> ACTION 2
+			return 0 //playerActions[0] -> ACTION 1
 		}
 		else{
-			return 0 //playerActions[0] -> ACTION 1
+			return 1 //playerActions[1] -> ACTION 2
 		}
 
 	} else if(signal<0){
@@ -73,12 +76,11 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 		}
 	}else{
 		//PLAYER PROBABILITY OF CHOOSE ACTION 1 (RANDOM)
-		//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 AND ROUND IT TO ONE DIGIT AND FOUR DECIMAL
-		let randPlayerProbAct1 = Math.round(Math.random()*2);
-		randPlayerProbAct1 = randPlayerProbAct1.toFixed(4);
+		//IT CHOOSES A RANDON NUMBER BETWEEN 0-1 
+		let randPlayerProbAct1 = Math.random();
 		
 		//PLAYER CHOICE IN THIS CASE IS RANDOM
-		let randProb = (Math.random() * 2);
+		let randProb = Math.random();
    		//randProb = randProb.toFixed(4);
 
    		if(randProb<=randPlayerProbAct1){
@@ -90,18 +92,18 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
    	}
    }
 
-   function getNashEq(valuesP1,valuesP2,actionsP1,actionsP2){
+   function getNashEq(valuesP1,valuesP2, actionsP1,actionsP2){
    	let nTurns = 1;
-   	let p1Choice, p2Choice;
-   	let p1PrevChoices,p2PrevChoices;
+   	let p1Choice = null, p2Choice = null;
+   	let p1PrevChoices = null,p2PrevChoices = null;
 	let p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
 
 	while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1,nTurns) == false ){
 		if(nTurns==1){
 			//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
-			p1Choice = Math.round(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
-			p2Choice = Math.round(Math.random()*2);
-			//Math.floor(Math.random()*(max-min+1)+min);
+			p1Choice = Math.round(Math.random()); //RANDOM NUMBER BETWEEN 0 AND 1
+			p2Choice = Math.round(Math.random());
+			//Math.floor(Math.random()*(max-min)+min);
 		
 			p1PrevChoices = [p1Choice];
 			p2PrevChoices = [p2Choice];
@@ -113,17 +115,17 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 				p1ProbsAct1[1] = 0;
 			}
 			else{
-				console.log("RANDOM ERRADOO");
+				console.log("RANDOM ERRADOO 1");
 			}
 
 			if(p2Choice==0){
 				p2ProbsAct1[1] = 1;
 			}
-			else if(p1Choice==1){
+			else if(p2Choice==1){
 				p2ProbsAct1[1] = 0;
 			}
 			else{
-				console.log("RANDOM ERRADOO");
+				console.log("RANDOM ERRADOO 2");
 			}
 		
 			nTurns++;
@@ -138,8 +140,8 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 		}
 		else{
 		
-			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1,actionsP1);
-			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2,actionsP2);
+			p1Choice = bestChoiceValue(valuesP2,p2ProbsAct1,valuesP1);
+			p2Choice = bestChoiceValue(valuesP1,p1ProbsAct1,valuesP2);
 
 			p1PrevChoices.push(p1Choice);
 			p2PrevChoices.push(p2Choice);
@@ -147,18 +149,18 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 			p1ProbsAct1[0] = p1ProbsAct1[1];
 			p2ProbsAct1[0] = p2ProbsAct1[1];
 
-			if(p1Choice==1){
-				p1ProbsAct1[1] = calcProbAct1(p1PrevChoices,actionsP1);
+			if(p1Choice==0){
+				p1ProbsAct1[1] = calcProbAct1(p1PrevChoices);
 			}
 			else{
-				p1ProbsAct1[1] = 1-(calcProbAct1(p1PrevChoices,actionsP1));
+				p1ProbsAct1[1] = 1-(calcProbAct1(p1PrevChoices));
 			}
 
-			if(p2Choice==1){
-				p2ProbsAct1[1] = calcProbAct1(p2PrevChoices,actionsP2);
+			if(p2Choice==0){
+				p2ProbsAct1[1] = calcProbAct1(p2PrevChoices);
 			}
 			else{
-				p2ProbsAct1[1] = 1-(calcProbAct1(p2PrevChoices,actionsP2));
+				p2ProbsAct1[1] = 1-(calcProbAct1(p2PrevChoices));
 			}
 
 			nTurns++;
