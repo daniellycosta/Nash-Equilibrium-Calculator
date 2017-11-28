@@ -2,7 +2,7 @@ var formPlace = document.getElementById("form")
 var resultsPlace = document.getElementById("result")
 
 function wasNashEqAchieved(p1Probs,p2Probs, nTurns){
-	if(nTurns>1){
+	if(nTurns>2){
 		let relativeErrorP1,relativeErrorP2;
 
 		relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100.0;
