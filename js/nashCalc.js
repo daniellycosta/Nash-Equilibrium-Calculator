@@ -1,20 +1,25 @@
 var formPlace = document.getElementById("form")
 var resultsPlace = document.getElementById("result")
 
-function wasNashEqAchieved(p1Probs,p2Probs){
-	let relativeErrorP1,relativeErrorP2;
+function wasNashEqAchieved(p1Probs,p2Probs, nTurns){
+	if(nTurns>1){
+		let relativeErrorP1,relativeErrorP2;
 
-	relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100.0;
-	relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100.0;
+		relativeErrorP1 = ( (p1Probs[1] - p1Probs[0])/p1Probs[1] )*100.0;
+		relativeErrorP2 = ( (p2Probs[1] - p2Probs[0])/p2Probs[1] )*100.0;
 
-	//DEBUG
-	console.log("relativeErrorP1");
-	console.log(relativeErrorP1);
-	console.log("relativeErrorP2");
-	console.log(relativeErrorP2);
+		//DEBUG
+		console.log("relativeErrorP1");
+		console.log(relativeErrorP1);
+		console.log("relativeErrorP2");
+		console.log(relativeErrorP2);
 
-	if(Math.abs(relativeErrorP1)<3 && Math.abs(relativeErrorP2)<3){
-		return true;
+		if(Math.abs(relativeErrorP1)<3 && Math.abs(relativeErrorP2)<3){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	else{
 		return false;
@@ -91,7 +96,7 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
    	let p1PrevChoices,p2PrevChoices;
 	let p1ProbsAct1 = [null,null],p2ProbsAct1 = [null,null]; //PREVIOUS AND CURRENT PROBABILITIES
 
-	while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1) == false ){
+	while( wasNashEqAchieved(p1ProbsAct1,p2ProbsAct1,nTurns) == false ){
 		if(nTurns==1){
 			//PLAYERS CHOOSING THEIR FIRST MOVE RANDOMLY
 			p1Choice = Math.round(Math.random()*2); //RANDOM NUMBER BETWEEN 0 AND 1
