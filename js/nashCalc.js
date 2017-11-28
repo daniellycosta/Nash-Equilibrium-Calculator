@@ -104,15 +104,21 @@ function bestChoiceValue(enemyValues,enemyProbs,playerValues,playerActions){
 			if(p1Choice==0){
 				p1ProbsAct1[1] = 1;
 			}
-			else{
+			else if(p1Choice==1){
 				p1ProbsAct1[1] = 0;
+			}
+			else{
+				console.log("RANDOM ERRADOO");
 			}
 
 			if(p2Choice==0){
 				p2ProbsAct1[1] = 1;
 			}
-			else{
+			else if(p1Choice==1){
 				p2ProbsAct1[1] = 0;
+			}
+			else{
+				console.log("RANDOM ERRADOO");
 			}
 		
 			nTurns++;
